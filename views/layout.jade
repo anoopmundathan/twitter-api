@@ -1,0 +1,33 @@
+doctype html(lang='en')
+head
+    //
+      Basic Page Needs
+      ––––––––––––––––––––––––––––––––––––––––––––––––––
+    meta(charset='utf-8')
+    |   
+    title Twitter Client
+    |   
+    meta(name='description', content='')
+    |   
+    meta(name='author', content='')
+    //
+      Mobile Specific Metas
+      ––––––––––––––––––––––––––––––––––––––––––––––––––
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    //
+      FONTS
+      ––––––––––––––––––––––––––––––––––––––––––––––––––
+    link(href='https://fonts.googleapis.com/css?family=Work+Sans:400,600', rel='stylesheet', type='text/css')
+    //
+      CSS
+      ––––––––––––––––––––––––––––––––––––––––––––––––––
+    link(rel='stylesheet', href='css/global.css')
+  body
+    include header
+    block content
+    include app-tweet
+    div(class="bounds app--body")
+      include app-body
+      include tweets
+      include following
+      include dmessage
