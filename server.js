@@ -1,16 +1,12 @@
-// 1. Create OAuth object
-// 2. Get OAuth token
-// 3. Authorize the App
-// 4. Get Access Token
-// 5. Make a Twitter API request and get data
-
 'use strict';
+
 var express = require('express');
 var OAuth = require('oauth').OAuth;
 var jade = require('jade');
 var cookieParser = require('cookie-parser');
 var path = require('path');
 var config = require('./config');
+var async = require('async');
 
 var url = require('url');
 
@@ -30,85 +26,126 @@ var app = express();
 // Serve static file
 app.use(express.static(__dirname + '/public'));
 
-
 // View Engine setup
 app.set('view engine', 'jade');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(cookieParser());
 
-var followers = [];
-var tweets = [];
 // Landing page route
 app.get('/', function(req, res) {
 
-	// If access token cookie are not available then show login page 
+	// If access token cookies are not available then show login page 
 	if (!req.cookies.access_token || !req.cookies.access_token_secret || !req.cookies.twitter_id) {
 		res.render('login');
 	} else {
-
-		// Render page
-		// res.sendFile(__dirname + '/views/' + 'index.html');
-		var access_token = req.cookies.access_token;
-		var access_secret = req.cookies.access_token_secret;
-
-		// // oauth.get('https://api.twitter.com/1.1/statuses/user_timeline.json',
-
-		var name  = req.cookies.twitter_id;
-		
-		// oauth.get('https://api.twitter.com/1.1/direct_messages.json',
-		oauth.get('https://api.twitter.com/1.1/statuses/user_timeline.json?count=1',
-					access_token, access_secret,
-					function(error, data) {
-						if (error) {
-							res.render('login');
-						}
-						// Parse the JSON response
-						data = JSON.parse(data);
-						
-						data.forEach(function(value, index) {
-							var tweet = {};
-							tweet.text = value.text;
-							tweet.name = value.user.name;
-							tweet.sname = value.user.screen_name;
-							tweet.image = value.user.profile_image_url;
-							tweet.rtcount = value.retweet_count;
-    						tweet.favcount = value.favorite_count;
-							tweets.push(tweet);
-						});
-
-					  getTweets(res, name, tweets);
-		}); // get
-
-		oauth.get('https://api.twitter.com/1.1/friends/list.json?count=1', access_token, access_secret, function(error, data) {
-			
-			if (error) {
-				res.render('login');
-			}
-			
-			data = JSON.parse(data);
-			data.users.forEach(function(value) {
-				var obj = {};
-				obj.name = value.name;
-				obj.sname = value.screen_name;
-				obj.image = value.profile_image_url;
-				obj.following = value.following;
-				followers.push(obj);
-			});
-			getFollower(res, followers);
-		}); // get
-		// res.render('index', {name: name, tweets:tweets});
-
+		getTwitterData(req, res);
 	} // If 
 }); // oauth.get
 
-var getTweets = function (res, name, tweets) {
-	res.render('index', {name: name, tweets:tweets, followers:followers});
-}
 
-var getFollower = function(res, name, follower) {
-	res.render('index', {name: name, tweets:tweets, followers:followers});
-}
+function getTwitterData(req, res) {
+
+	// Access cookie details	
+	var access_token = req.cookies.access_token;
+	var access_secret = req.cookies.access_token_secret;
+	var name  = req.cookies.twitter_id;
+
+	var followers = [];
+	var tweets = [];
+	var dmessages  = [];
+
+	var userTimeLine = new Promise(function(resolve, reject) {
+		// Call twitter RESt API to get user timeline
+		var url = 'https://api.twitter.com/1.1/statuses/user_timeline.json?count=5';
+		oauth.get(url, access_token, access_secret, function(error, data) {
+
+			if(!error) {
+				// Parse JSON response
+				data = JSON.parse(data);
+				tweets = [];
+
+				// Iterate through array and store into tweets array
+				data.forEach(function(value, index) {
+					// Temporary tweet object to store data
+					var obj = {};
+
+					obj.text = value.text;
+					obj.name = value.user.name;
+					obj.sname = value.user.screen_name;
+					obj.image = value.user.profile_image_url;
+					obj.rtcount = value.retweet_count;
+					obj.favcount = value.favorite_count;
+
+					tweets.push(obj);
+				}); // End of forEach
+
+				resolve(tweets);
+			} else {
+				reject(error);
+			}
+		}); // End of oauth.get - user timeline
+	}); // End of userTimeLine
+
+	var userFriends = new Promise(function(resolve, reject) {
+
+		// Call twitter RESt API to get user friends
+		url = 'https://api.twitter.com/1.1/friends/list.json?count=5';
+		oauth.get(url, access_token, access_secret, function(error, data) {
+
+			if (!error) {
+				data = JSON.parse(data);
+
+				followers = [];
+				data.users.forEach(function(value) {
+					var obj = {};
+					obj.name = value.name;
+					obj.sname = value.screen_name;
+					obj.image = value.profile_image_url;
+					obj.following = value.following;
+					followers.push(obj);
+				}); // End of forEach
+
+				resolve(followers);
+			} else {
+				reject(error);
+			}
+		}); // End of oauth.get - user friends
+	}); // End of userFriends
+
+	var userDMessage = new Promise(function(resolve, reject) {
+
+		// Call twitter RESt API to get user Direct Message 
+		// url = 'https://api.twitter.com/1.1/direct_messages/sent.json?count=5';
+		url = 'https://api.twitter.com/1.1/direct_messages.json?count=5';
+		oauth.get(url, access_token, access_secret, function(error, data) {
+
+			if (!error) {
+				data = JSON.parse(data);
+
+				dmessages = [];
+				data.forEach(function(value) {
+					var obj = {};
+					obj.name = value.sender_screen_name;
+					obj.text = value.text;
+					obj.image = value.sender.profile_image_url;
+					dmessages.push(obj);
+				});		
+				resolve(dmessages);
+			} else {
+				reject(error);
+			}
+		}); // End of oauth.get - user Direct Message
+	}); // End of userDMessage
+
+	Promise.all([userTimeLine, userFriends, userDMessage]).then(function(data) {
+		res.render('index', 
+			{name: data[0][0].sname, tweets:data[0], followers:data[1], dmessages:data[2]});
+	})
+	.catch(function(error) {
+		res.send('error');
+	})
+} // End of getTwitterData
 
 // Get OAuth token 
 app.get('/auth/twitter', function(req, res) {
@@ -124,6 +161,11 @@ app.get('/auth/twitter', function(req, res) {
 				res.redirect(config.authorize_url + '?oauth_token='+oauth_token);
 			}
 		});
+});
+
+app.get('/signout', function(req, res) {
+	res.send('Signed Out')
+
 });
 
 // Callback URL once Twitter has authorized

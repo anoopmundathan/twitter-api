@@ -6,13 +6,14 @@
               .circle--fluid
                 .circle--fluid--cell.circle--fluid--primary
                   a.app--tweet--author
-                    .app--avatar(style='background-image: url(images/f-spore.png)')
-                      img(src='images/f-spore.png')
+                    .app--avatar(style='background-image: url(#{follower.image})')
                     |                   
                     h4 #{follower.name}
                     |                   
                     p #{follower.sname}
                 |               
                 .circle--fluid--cell
-                  a.button.button-text Unfollow
-                  a.button Follow
+                  if follower.following
+                    a.button.button-text Unfollow
+                  else
+                    a.button Follow

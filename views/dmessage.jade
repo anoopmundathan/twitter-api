@@ -1,49 +1,17 @@
 .grid-33
     .app--section
         ul.app--message--list
+         each dmessage in dmessages
           li
             h3
               | Conversation with 
-              a Jill Spore
+              a #{dmessage.name}
             |             
             ul.app--message--conversation
               li.app--message
-                .app--avatar(style='background-image: url(images/f-spore.png)')
+                .app--avatar(style='background-image: url(#{dmessage.image})')
                   img(src='images/f-spore.png')
                 |                 
-                p.app--message--text How are things?
+                p.app--message--text #{dmessage.text}
                 |                 
                 p.app--message--timestamp 3 hours ago
-              |               
-              li.app--message--me
-                .app--avatar(style='background-image: url(images/m-spore.png)')
-                  img(src='images/m-spore.png')
-                |                 
-                p.app--message--text
-                  | Great! How about you? Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                |                 
-                p.app--message--timestamp 2 hours ago
-              |               
-              li.app--message
-                .app--avatar(style='background-image: url(images/f-spore.png)')
-                  img(src='images/f-spore.png')
-                |                 
-                p.app--message--text Fantastic! You wanna grab lunch?
-                |                 
-                p.app--message--timestamp 2 hours ago
-              |               
-              li.app--message--me
-                .app--avatar(style='background-image: url(images/m-spore.png)')
-                  img(src='images/m-spore.png')
-                |                 
-                p.app--message--text Totes mcgotes. How about Mackey&apos;s?
-                |                 
-                p.app--message--timestamp 1 hour ago
-              |               
-              li.app--message
-                .app--avatar(style='background-image: url(images/f-spore.png)')
-                  img(src='images/f-spore.png')
-                |                 
-                p.app--message--text Aww yeah.. I&apos;m craving a Triple Quarter Mack!
-                |                 
-                p.app--message--timestamp 1 hour ago
