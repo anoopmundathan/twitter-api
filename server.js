@@ -6,7 +6,6 @@ var jade = require('jade');
 var cookieParser = require('cookie-parser');
 var path = require('path');
 var config = require('./config');
-var async = require('async');
 
 var url = require('url');
 
