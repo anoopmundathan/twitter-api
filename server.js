@@ -6,6 +6,7 @@ var jade = require('jade');
 var cookieParser = require('cookie-parser');
 var path = require('path');
 var config = require('./config');
+var bodyParser = require('body-parser');
 
 var url = require('url');
 
@@ -25,13 +26,16 @@ var app = express();
 // Serve static file
 app.use(express.static(__dirname + '/public'));
 
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
 // View Engine setup
 app.set('view engine', 'jade');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(cookieParser());
 
-// Landing page route
+// 1. Landing page route
 app.get('/', function(req, res) {
 
 	// If access token cookies are not available then show login page 
@@ -41,7 +45,6 @@ app.get('/', function(req, res) {
 		getTwitterData(req, res);
 	} // If 
 }); // oauth.get
-
 
 function getTwitterData(req, res) {
 
@@ -142,17 +145,16 @@ function getTwitterData(req, res) {
 			{name: data[0][0].sname, tweets:data[0], followers:data[1], dmessages:data[2]});
 	})
 	.catch(function(error) {
-		res.send('error');
+		res.send('something wrong with getTweetData');
 	})
 } // End of getTwitterData
 
-// Get OAuth token 
+// 2. When user Click to Login - This route will receive the request
 app.get('/auth/twitter', function(req, res) {
 
 	// Authorize App to use Twitter API
 	oauth.getOAuthRequestToken(function(error, oauth_token, oauth_token_secret, results) {
 			if (error) {
-				console.log(error);
 				res.send("Authentication failed!");
 			} else {
 				res.cookie('oauth_token', oauth_token, { httpOnly: true });
@@ -162,18 +164,12 @@ app.get('/auth/twitter', function(req, res) {
 		});
 });
 
-app.get('/signout', function(req, res) {
-	res.send('Signed Out')
-
-});
-
-// Callback URL once Twitter has authorized
+// 3. Callback URL once Twitter has authorized
 app.get(url.parse(config.oauth_callback).path, function(req, res) {
 
 	// Clear the request token data from the cookies
 	res.clearCookie('oauth_token');
 	res.clearCookie('oauth_token_secret');
-
 
 	oauth.getOAuthAccessToken(req.cookies.oauth_token, req.cookies.oauth_token_secret, req.query.oauth_verifier,
 			function(error, oauth_access_token, oauth_access_token_secret, results) {
@@ -202,6 +198,32 @@ app.get(url.parse(config.oauth_callback).path, function(req, res) {
 					});
 		});
 });
+
+// 4. Post new Tweet
+app.post('/post', function(req, res) {
+	
+	var url = 'https://api.twitter.com/1.1/statuses/update.json';
+	var access_token = req.cookies.access_token;
+	var access_secret = req.cookies.access_token_secret;
+
+	var body = {
+		'status' : req.body.new_tweet 
+	}
+
+	oauth.post(url, access_token, access_secret, body, "application/x-www-form-urlencoded", function (error, body, response) {
+        if(!error) {
+        	console.log('Twitter status updated.\n');
+        	res.redirect('/');
+        } else {
+        	console.log('Error: Something is wrong.\n'+JSON.stringify(error)+'\n');
+        }
+    }); // ouath.post
+}); // app.post
+
+// 5. Sign out
+app.get('/signout', function(req, res) {
+	res.redirect('/auth/twitter');
+}); //app.get - signout
 
 // Assign port 
 app.set('port', process.env.PORT || 3000);

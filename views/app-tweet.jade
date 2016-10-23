@@ -1,11 +1,10 @@
 .app--tweet
-    form
+    form(method="post", action="/post")
         .circle--fluid
           .circle--fluid--cell.circle--fluid--primary.align-bottom.app--tweet--post
-            .app--avatar(style='background-image: url(images/m-spore.png)')
-              img(src='images/m-spore.png')
+            .app--avatar(style='background-image: url(#{tweets[0].image})')
             |           
-            textarea#tweet-textarea.circle--textarea--input(placeholder="What's happening?")
+            textarea#tweet-textarea.circle--textarea--input(placeholder="What's happening?", name="new_tweet")
             |           
             strong#tweet-char.app--tweet--char 140
           |         
