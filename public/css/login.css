@@ -1,0 +1,28 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: "Gotham Rounded A", "Gotham Rounded B", Helvetica, Arial, sans-serif;
+	color: #fff;
+	letter-spacing: 2px;
+}
+
+header {
+	padding-top: 30px;
+	height: 100px;
+	background-color: #1da1f2;
+	text-align: center;
+}
+
+h1 {
+	margin-bottom: 10px;
+}
+
+a {
+	cursor: pointer;
+    text-decoration: none;
+    color: #fff;
+}
+
