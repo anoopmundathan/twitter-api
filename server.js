@@ -92,8 +92,8 @@ app.get(url.parse(config.oauth_callback).path, function(req, res) {
 
 						// Tell router that authentication was successful
 						res.redirect('/');
-					});
-		});
+				});
+	});
 });
 
 // 4. Post new Tweet

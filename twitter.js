@@ -6,7 +6,6 @@ module.exports.getTwitterData = function getTwitterData(req, res, oauth) {
 	// Access cookie details	
 	var access_token = req.cookies.access_token;
 	var access_secret = req.cookies.access_token_secret;
-	var name  = req.cookies.twitter_id;
 
 	var following = [];
 	var tweets = [];
