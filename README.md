@@ -7,15 +7,21 @@ This app does following
  Display 5 most recent tweets, 5 most recent friends and  5 most recent private messages.
  Ability to post new tweet
 
-# How to run?
-Open Terminal window
+# Installation
 ```
 $ git clone https://github.com/anoopmundathan/twitter-api.git
 $ cd twitter-api
 $ npm install 
-$ node server.js
 ```
-Open another Terminal Tab
+# Run
 ```
-$ open http://localhost:3000
+node server.js
 ```
+Goto ```http://localhost:3000``` to view the app in browser
+
+# Note
+
+Before running the app update ```config.json``` file with correct twitter [API Keys]. Obtain API keys from [here](https://apps.twitter.com/)
+
+
+
