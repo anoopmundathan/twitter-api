@@ -7,13 +7,13 @@ body {
 	font-family: "Gotham Rounded A", "Gotham Rounded B", Helvetica, Arial, sans-serif;
 	color: #fff;
 	letter-spacing: 2px;
+	text-align: center;
 }
 
 header {
 	padding-top: 30px;
 	height: 100px;
 	background-color: #1da1f2;
-	text-align: center;
 }
 
 h1 {
@@ -26,3 +26,8 @@ a {
     color: #fff;
 }
 
+.error {
+	padding-top: 30px;
+	background-color: #f15c5c;
+	height: 60px;
+}

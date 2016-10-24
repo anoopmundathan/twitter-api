@@ -1,19 +1,19 @@
 .grid-33
     .app--section
         ul.app--user--list
-          each follower in followers
+          each follow in following
             li
               .circle--fluid
                 .circle--fluid--cell.circle--fluid--primary
                   a.app--tweet--author
-                    .app--avatar(style='background-image: url(#{follower.image})')
+                    .app--avatar(style='background-image: url(#{follow.image})')
                     |                   
-                    h4 #{follower.name}
+                    h4 #{follow.name}
                     |                   
-                    p #{follower.sname}
+                    p #{follow.sname}
                 |               
                 .circle--fluid--cell
-                  if follower.following
+                  if follow.following
                     a.button.button-text Unfollow
                   else
                     a.button Follow
