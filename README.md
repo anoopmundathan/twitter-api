@@ -1,5 +1,5 @@
 # twitter-api
-Treehouse - Project7 - Build a Twitter Interface
+> Treehouse - Project7 - Build a Twitter Interface
 
 Twitter’s REST API to access Twitter profile information and render to the user. The page authenticate access to Twitter profile and use this access to populate three columns with twitter data.
 
@@ -9,17 +9,22 @@ This app does following
  * Display most recent private messages
  * Ability to post new tweet
 
-# Installation
+## Getting Started
+### Setup
 ```
 $ git clone https://github.com/anoopmundathan/twitter-api.git
 $ cd twitter-api
+```
+### Install
+```
 $ npm install 
 ```
-# Run
+### Run
 ```
 node server.js
 ```
-Goto ```http://localhost:3000``` to view the app in browser
+### View
+Open browser and visit  ```http://localhost:3000```
 
 # Note
 
