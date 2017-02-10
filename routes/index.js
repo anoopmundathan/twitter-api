@@ -3,7 +3,7 @@
 var express = require('express');
 var url = require('url');
 var config = require('../config');
-var twitter = require('../twitter');
+var twitter = require('./twitter');
 var router = express.Router();
 var OAuth = require('oauth').OAuth;
 
@@ -104,6 +104,6 @@ router.post('/post', function(req, res) {
 // 5. Sign out
 router.get('/signout', function(req, res) {
 	res.redirect('/auth/twitter');
-}); //app.get - signout
+}); 
 
 module.exports = router;

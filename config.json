@@ -2,8 +2,8 @@
 	"request_token_url": "https://api.twitter.com/oauth/request_token",
 	"access_token_url": "https://api.twitter.com/oauth/access_token",
 	"authorize_url": "https://twitter.com/oauth/authorize",
-	"consumer_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-	"consumer_secret": "xxxxxxxxxxxxxxxxxxxxxxxxx",
+	"consumer_key": "WKjr6t3pOEuGrZhhj82zMip9w",
+	"consumer_secret": "7SSsxFJseCCyApoYEioED7kr1bZlLeT56OPRnTsfDNrXGomyYw",
 	"oauth_version": "1.0",
 	"oauth_signature": "HMAC-SHA1",
 	"oauth_callback": "http://localhost:3000/request-token"

@@ -6,9 +6,6 @@ var cookieParser = require('cookie-parser');
 var path = require('path');
 var bodyParser = require('body-parser');
 var router = require('./routes/index');
-
-
-
 var app = express();
 
 // Serve static file
@@ -16,13 +13,13 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use(cookieParser());
 
 // View Engine setup
 app.set('view engine', 'jade');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use(cookieParser());
-
+// Handle route
 app.use('/', router);
 
 // Assign port 
